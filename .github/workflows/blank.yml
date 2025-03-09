@@ -1,0 +1,23 @@
+name: Stop zomboid EC2
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment (start or stop)'
+        required: true
+        default: 'start' # Default to start environment
+
+jobs:
+
+  stop-ec2-zomboid:
+    environment:
+      name: Stop EC2 ZomboidServer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stop EC2 mitra
+        run: aws ec2 stop-instances --instance-ids ${{ secrets.INSTANCE_IDS }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.INSTANCE_REGION }}

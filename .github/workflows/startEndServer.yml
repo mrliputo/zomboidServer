@@ -6,12 +6,13 @@ on:
       environment:
         description: 'Select environment (start or stop)'
         required: true
-        default: 'start'  # Default ke start jika tidak ada input yang diberikan
+        default: 'start' # Default to start environment
 
 jobs:
   start-ec2-zomboid:
+    environment:
+      name: Start EC2 ZomboidServer
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.environment == 'start' }}  # Menjalankan hanya jika environment == 'start'
     steps:
       - name: Start EC2 ZomboidServer
         run: aws ec2 start-instances --instance-ids ${{ secrets.INSTANCE_IDS }}
@@ -19,15 +20,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.INSTANCE_REGION }}
-
-  stop-ec2-zomboid:
-    needs: start-ec2-zomboid
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.environment == 'stop' }}  # Menjalankan hanya jika environment == 'stop'
-    steps:
-      - name: Stop EC2 ZomboidServer
-        run: aws ec2 stop-instances --instance-ids ${{ secrets.INSTANCE_IDS }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.INSTANCE_REGION }}
+          
+  
